@@ -1,6 +1,6 @@
 
 
-function Get-CurrentUserPSModulePath {
+function Get-PSModulePathForCurrentUser {
     param ()
 
     $path = $env:PSModulePath.Split(';').Where({
