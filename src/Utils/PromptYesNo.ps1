@@ -1,5 +1,5 @@
 
-function PromptYesNo([string][ValidateNotNullOrEmpty()]$title, [string][ValidateNotNullOrEmpty()]$questions) {
+function promptYesNo([string][ValidateNotNullOrEmpty()]$title, [string][ValidateNotNullOrEmpty()]$questions) {
     $choices = '&Yes', '&No'
 
     $decision = $Host.UI.PromptForChoice($title, $question, $choices, 1)
