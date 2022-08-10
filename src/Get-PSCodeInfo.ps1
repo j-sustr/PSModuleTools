@@ -2,18 +2,20 @@
 
 <#
 
-
-Returns:
- - public functions
- - private functions
- - 
-
-
 #>
 
 function Get-PSCodeInfo {
-    param (
-        
+    [CmdletBinding(DefaultParameterSetName = 'Path')]
+    param
+    (
+        [string]
+        [Parameter(Mandatory, ValueFromPipeline, ParameterSetName = 'Path')]
+        [Alias('FullName')]
+        $Path,
+
+        [string]
+        [Parameter(Mandatory, ValueFromPipeline, ParameterSetName = 'Code')]
+        $Code
     )
     
     begin {
@@ -38,9 +40,8 @@ function Get-PSCodeInfo {
 
         $tokens = [Management.Automation.PSParser]::Tokenize($code, [ref]$errors)
 
-        $functions = getFunctionsFromTokens($tokens)
+        $functions = @(getFunctionsFromTokens($tokens))
 
-        # return the results as a custom object
         [PSCustomObject]@{
             Name      = $name
             Path      = $filepath
