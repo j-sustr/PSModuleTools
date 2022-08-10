@@ -7,8 +7,6 @@
 
 #>
 
-{ 0 }
-
 function Update-ModuleManifestOfProject {
     param (
         [string]
@@ -26,6 +24,10 @@ function Update-ModuleManifestOfProject {
     $srcPath = Join-Path $repoPath "src"
 
     $scripts = Get-ChildItem -Path $srcPath -Recurse -Filter *.ps1
+
+    $codeInfo = Get-PSCodeInfo $scripts
+    
+    $functionGroups = $codeInfo.Functions | Group-Object -Property { $_ -cmatch "^[a-z]" ? "Private" : "Public" } -AsHashTable
 
     $nestedModules = @()
     $functionsToExport = @()
