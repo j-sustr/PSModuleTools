@@ -6,7 +6,7 @@
 
 #>
 
-function Update-ModuleManifestOfProject {
+function Update-PSProjectModuleManifest {
     [CmdletBinding()]
     param (
         [string]
@@ -20,14 +20,14 @@ function Update-ModuleManifestOfProject {
         Write-Warning "Repo '$repoPath' has working files"
     }
 
-    $projectCodeInfo = Get-PSProjectCodeInfo 
+    $projectInfo = Get-PSProjectCodeInfo $Path
     
-    $functionGroups = $codeInfo.Functions | Group-Object -Property { $_ -cmatch '^[a-z]' ? 'Private' : 'Public' } -AsHashTable
+    $functionGroups = $projectInfo.Functions | Group-Object -Property { $_ -cmatch '^[a-z]' ? 'Private' : 'Public' } -AsHashTable
 
     # $nestedModules = @()
 
     $updateParams = @{
-        Path              = $manifestPath.FullName
+        Path              = $projectInfo.ModuleManifestPath
         FunctionsToExport = $functionGroups.Public
     }
     Update-ModuleManifest @updateParams
