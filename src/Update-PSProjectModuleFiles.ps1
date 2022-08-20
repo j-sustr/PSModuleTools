@@ -33,24 +33,18 @@ function Update-PSProjectModuleFiles {
     Update-ModuleManifest @updateParams
 
     # --- .psm1 ---
-    $scriptModuleContent = formatScriptModuleContent $projectInfo.Functions
+    $scriptModuleContent = formatScriptModuleContent $projectInfo.ScriptFilePaths
 
     Set-Content -Path $projectInfo.ScriptModuleFilePath -Value $scriptModuleContent
 }
 
 
-function formatScriptModuleContent($functions) {
+function formatScriptModuleContent($scriptPaths) {
     $sb = [System.Text.StringBuilder]::new()
     
-    [void]$sb.AppendLine('# Private')
-    foreach ($func in $functions.Private) {
-        [void]$sb.AppendLine(". `$PSScriptRoot\$func.ps1")    
-    }
-    [void]$sb.AppendLine()
-
-    [void]$sb.AppendLine('# Public')
-    foreach ($func in $functions.Public) {
-        [void]$sb.AppendLine(". `$PSScriptRoot\$func.ps1")
+    foreach ($path in $scriptPaths) {
+        $path = $path -replace '^src\\', '$PSScriptRoot\'
+        [void]$sb.AppendLine(". $path")
     }
 
     return $sb.ToString()

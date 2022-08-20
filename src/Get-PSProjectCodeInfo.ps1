@@ -14,12 +14,16 @@ function Get-PSProjectCodeInfo {
     $scriptModuleFilePath = getScriptModuleFilePath $srcPath
     
     # --- code ---
-    $codeInfo = Get-ChildItem -Path $srcPath -Recurse -Filter *.ps1 | Get-PSCodeInfo
+    $scriptFiles = Get-ChildItem -Path $srcPath -Recurse -Filter *.ps1
+    $codeInfo = $scriptFiles | Get-PSCodeInfo
     if ($codeInfo.Errors) {
         throw "Project has errors: $($codeInfo.Errors)"
     }
 
     $functionGroups = $codeInfo.Functions | Group-Object -Property { $_ -cmatch '^[a-z]' ? 'Private' : 'Public' } -AsHashTable
+    
+    $scriptFilePaths = $scriptFiles | ForEach-Object { $_.FullName.Replace($srcPath, 'src') }
+    
     # $nestedModules = @()
 
     return [PSCustomObject]@{
@@ -27,6 +31,7 @@ function Get-PSProjectCodeInfo {
         ModuleManifestFilePath = $moduleManifestFilePath
         ScriptModuleFilePath   = $scriptModuleFilePath
         Functions              = $functionGroups
+        ScriptFilePaths        = $scriptFilePaths
         IsModule               = $true
     }
 }
