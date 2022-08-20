@@ -10,33 +10,21 @@ function Update-ModuleManifestOfProject {
     [CmdletBinding()]
     param (
         [string]
-        $Path = "."
+        $Path = '.'
     )
-    
-    $repoPath = Split-Path (Get-GitDirectory -Path $Path) -Parent
 
     # Check Git repo status
     if ((Get-GitStatus).HasWorking) {
+        # TODO: replace after completed implementation
         # throw "Repo '$repoPath' has working files"
         Write-Warning "Repo '$repoPath' has working files"
     }
 
-    $srcPath = Join-Path $repoPath "src"
-    $manifestFile = Get-ChildItem $srcPath -Filter *.psd1
-    if ($null -eq $manifestFile) {
-        throw "There must be a .psd1 file in '$srcPath'"
-    }
-    if ($manifestFile.Count -gt 1) {
-        throw "There must be only one .psd1 file in '$srcPath'"
-    }
-
-    $codeInfo = Get-ChildItem -Path $srcPath -Recurse -Filter *.ps1 | Get-PSCodeInfo
+    $projectCodeInfo = Get-PSProjectCodeInfo 
     
-    $functionGroups = $codeInfo.Functions | Group-Object -Property { $_ -cmatch "^[a-z]" ? "Private" : "Public" } -AsHashTable
+    $functionGroups = $codeInfo.Functions | Group-Object -Property { $_ -cmatch '^[a-z]' ? 'Private' : 'Public' } -AsHashTable
 
     # $nestedModules = @()
-
-    (Get-ChildItem -Filter *.ps1)
 
     $updateParams = @{
         Path              = $manifestPath.FullName
@@ -45,6 +33,3 @@ function Update-ModuleManifestOfProject {
     Update-ModuleManifest @updateParams
 
 }
-
-
-Update-ModuleManifestOfProject
