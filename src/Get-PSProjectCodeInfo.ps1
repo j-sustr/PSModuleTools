@@ -14,12 +14,18 @@ function Get-PSProjectCodeInfo {
     
     # --- code ---
     $codeInfo = Get-ChildItem -Path $srcPath -Recurse -Filter *.ps1 | Get-PSCodeInfo
+    if ($codeInfo.Errors) {
+        throw "Project has errors: $($codeInfo.Errors)"
+    }
+
     $functionGroups = $codeInfo.Functions | Group-Object -Property { $_ -cmatch '^[a-z]' ? 'Private' : 'Public' } -AsHashTable
+    # $nestedModules = @()
 
     return [PSCustomObject]@{
         SrcPath            = $srcPath
         ModuleManifestPath = $moduleManifestPath
         Functions          = $functionGroups
+        IsModule           = $true
     }
 }
 

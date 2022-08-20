@@ -10,25 +10,23 @@ function Update-PSProjectModuleManifest {
     [CmdletBinding()]
     param (
         [string]
-        $Path = '.'
+        $Path = '.',
+
+        [Switch]
+        # Ignore Git repo status
+        $Force
     )
 
     # Check Git repo status
-    if ((Get-GitStatus).HasWorking) {
-        # TODO: replace after completed implementation
-        # throw "Repo '$repoPath' has working files"
-        Write-Warning "Repo '$repoPath' has working files"
+    if ((Get-GitStatus).HasWorking -and (-not $Force.IsPresent)) {
+        throw "Repo '$repoPath' has working files"
     }
 
     $projectInfo = Get-PSProjectCodeInfo $Path
-    
-    $functionGroups = $projectInfo.Functions | Group-Object -Property { $_ -cmatch '^[a-z]' ? 'Private' : 'Public' } -AsHashTable
-
-    # $nestedModules = @()
 
     $updateParams = @{
         Path              = $projectInfo.ModuleManifestPath
-        FunctionsToExport = $functionGroups.Public
+        FunctionsToExport = $projectInfo.Functions.Public
     }
     Update-ModuleManifest @updateParams
 

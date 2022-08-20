@@ -9,7 +9,7 @@ function Install-ModuleForCurrentUser {
 
         [Parameter(Position = 1)]
         [version]
-        $Version = "0.0.1.0"
+        $Version = '0.0.1'
     )
 
     # $version = [version] (Get-Metadata -Path $ManifestPath -PropertyName 'ModuleVersion')
