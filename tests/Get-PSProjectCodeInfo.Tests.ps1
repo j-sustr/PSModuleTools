@@ -16,7 +16,10 @@ Describe 'Get-PSProjectCodeInfo Tests' {
 
         $info = Get-PSProjectCodeInfo $modulePath
 
-        $info | Should -HaveProperty ModuleManifestPath "$sampleProjectPath\src\sampleproject.psd1"
+        $info.SrcPath | Should -BeExactly "$sampleProjectPath\src"
+        $info.ModuleManifestPath | Should -BeExactly "$sampleProjectPath\src\sampleproject.psd1"
+        $info.Functions.Public | Should -BeExactly @('Get-Something')
+        $info.Functions.Private | Should -BeExactly @('doSomething')
 
     }
 }
