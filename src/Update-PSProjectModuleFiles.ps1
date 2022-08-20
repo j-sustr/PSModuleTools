@@ -26,21 +26,32 @@ function Update-PSProjectModuleFiles {
 
     # --- .psd1 ---
     $updateParams = @{
-        Path              = $projectInfo.ModuleManifestPath
+        Path              = $projectInfo.ModuleManifestFilePath
+        RootModule        = Split-Path $projectInfo.ScriptModuleFilePath -Leaf
         FunctionsToExport = $projectInfo.Functions.Public
     }
     Update-ModuleManifest @updateParams
 
     # --- .psm1 ---
+    $scriptModuleContent = formatScriptModuleContent $projectInfo.Functions
+
+    Set-Content -Path $projectInfo.ScriptModuleFilePath -Value $scriptModuleContent
 }
 
 
-function newScriptModuleFile($path, $functions) {
-    param (
-        OptionalParameters
-    )
+function formatScriptModuleContent($functions) {
+    $sb = [System.Text.StringBuilder]::new()
     
+    [void]$sb.AppendLine('# Private')
+    foreach ($func in $functions.Private) {
+        [void]$sb.AppendLine(". `$PSScriptRoot\$func.ps1")    
+    }
+    [void]$sb.AppendLine()
 
+    [void]$sb.AppendLine('# Public')
+    foreach ($func in $functions.Public) {
+        [void]$sb.AppendLine(". `$PSScriptRoot\$func.ps1")
+    }
 
-    New-Item -ItemType File
+    return $sb.ToString()
 }
