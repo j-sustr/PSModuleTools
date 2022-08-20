@@ -6,7 +6,7 @@
 
 #>
 
-function Update-PSProjectModuleManifest {
+function Update-PSProjectModuleFiles {
     [CmdletBinding()]
     param (
         [string]
@@ -24,10 +24,23 @@ function Update-PSProjectModuleManifest {
 
     $projectInfo = Get-PSProjectCodeInfo $Path
 
+    # --- .psd1 ---
     $updateParams = @{
         Path              = $projectInfo.ModuleManifestPath
         FunctionsToExport = $projectInfo.Functions.Public
     }
     Update-ModuleManifest @updateParams
 
+    # --- .psm1 ---
+}
+
+
+function newScriptModuleFile($path, $functions) {
+    param (
+        OptionalParameters
+    )
+    
+
+
+    New-Item -ItemType File
 }

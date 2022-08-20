@@ -10,6 +10,11 @@ Describe 'Get-PSProjectCodeInfo Tests' {
     }
 
     It 'Gets PSProject code info' {
+        Mock Get-PSCodeInfo {
+            return @{
+                Functions = @('FuncA', 'funcB', 'DummyFn')
+            }
+        }
         Mock Get-GitDirectory {
             return "$sampleProjectPath\.git"
         }
@@ -18,6 +23,7 @@ Describe 'Get-PSProjectCodeInfo Tests' {
 
         $info.SrcPath | Should -BeExactly "$sampleProjectPath\src"
         $info.ModuleManifestPath | Should -BeExactly "$sampleProjectPath\src\sampleproject.psd1"
+        $info.ScriptModuleFilePath | Should -BeExactly "$sampleProjectPath\src\sampleproject.psm1"
         $info.Functions.Public | Should -BeExactly @('Get-Something')
         $info.Functions.Private | Should -BeExactly @('doSomething')
 

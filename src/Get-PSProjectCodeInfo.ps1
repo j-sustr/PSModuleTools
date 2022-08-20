@@ -10,7 +10,8 @@ function Get-PSProjectCodeInfo {
     # --- paths ---
     $repoPath = Split-Path (Get-GitDirectory -Path $Path) -Parent
     $srcPath = Join-Path $repoPath 'src'
-    $moduleManifestPath = getModuleManifestPath $srcPath
+    $moduleManifestFilePath = getModuleManifestFilePath $srcPath
+    $scriptModuleFilePath = getScriptModuleFilePath $srcPath
     
     # --- code ---
     $codeInfo = Get-ChildItem -Path $srcPath -Recurse -Filter *.ps1 | Get-PSCodeInfo
@@ -22,21 +23,33 @@ function Get-PSProjectCodeInfo {
     # $nestedModules = @()
 
     return [PSCustomObject]@{
-        SrcPath            = $srcPath
-        ModuleManifestPath = $moduleManifestPath
-        Functions          = $functionGroups
-        IsModule           = $true
+        SrcPath                = $srcPath
+        ModuleManifestFilePath = $moduleManifestFilePath
+        ScriptModuleFilePath   = $scriptModuleFilePath
+        Functions              = $functionGroups
+        IsModule               = $true
     }
 }
 
 
-function getModuleManifestPath($srcPath) {
-    $manifestPath = Get-ChildItem $srcPath -Filter *.psd1
-    if ($null -eq $manifestPath) {
+function getModuleManifestFilePath($srcPath) {
+    $psd1Path = Get-ChildItem $srcPath -Filter *.psd1
+    if ($null -eq $psd1Path) {
         throw "There must be a .psd1 file in '$srcPath'"
     }
-    if ($manifestPath.Count -gt 1) {
+    if ($psd1Path.Count -gt 1) {
         throw "There must be only one .psd1 file in '$srcPath'"
     }
-    return $manifestPath
+    return $psd1Path
+}
+
+function getScriptModuleFilePath($srcPath) {
+    $psm1Path = Get-ChildItem $srcPath -Filter *.psm1
+    if ($null -eq $psm1Path) {
+        throw "There must be a .psm1 file in '$srcPath'"
+    }
+    if ($psm1Path.Count -gt 1) {
+        throw "There must be only one .psm1 file in '$srcPath'"
+    }
+    return $psm1Path
 }
