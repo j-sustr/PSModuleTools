@@ -21,11 +21,13 @@ Describe 'Get-PSProjectCodeInfo Tests' {
 
         $info = Get-PSProjectCodeInfo $modulePath
 
+
+        $info
+
         $info.SrcPath | Should -BeExactly "$sampleProjectPath\src"
-        $info.ModuleManifestPath | Should -BeExactly "$sampleProjectPath\src\sampleproject.psd1"
+        $info.ModuleManifestFilePath | Should -BeExactly "$sampleProjectPath\src\sampleproject.psd1"
         $info.ScriptModuleFilePath | Should -BeExactly "$sampleProjectPath\src\sampleproject.psm1"
-        $info.Functions.Public | Should -BeExactly @('Get-Something')
-        $info.Functions.Private | Should -BeExactly @('doSomething')
+        $info.Functions | Should -BeExactly @('Get-Something')
 
     }
 }

@@ -17,7 +17,7 @@ function Get-PSCodeInfo {
         [Parameter(Mandatory, ValueFromPipeline, ParameterSetName = 'Code')]
         $Code
     )
-    
+
     begin {
         $errors = $null
     }
@@ -31,8 +31,7 @@ function Get-PSCodeInfo {
             $code = Get-Content -Path $Path -Raw -Encoding Default
             $name = Split-Path -Path $Path -Leaf
             $filepath = $Path
-        }
-        else {
+        } else {
             # else the code is already present in $Code
             $name = $Code
             $filepath = ''
@@ -40,14 +39,19 @@ function Get-PSCodeInfo {
 
         $tokens = [Management.Automation.PSParser]::Tokenize($code, [ref]$errors)
 
+        # TODO: Get function aliases
         $functions = @(getFunctionsFromTokens($tokens))
+
+        # TODO: Get variables
+        $variables = @()
 
         [PSCustomObject]@{
             Name      = $name
             Path      = $filepath
             Functions = $functions
+            Variables = $variables
             Errors    = $errors | Select-Object -ExpandProperty Token -Property Message
-        }  
+        }
     }
 }
 
@@ -57,9 +61,16 @@ function getFunctionsFromTokens($tokens) {
     }
 
     return 0..($tokens.Count - 2) | ForEach-Object {
-        $isKeyword = $tokens[$_].Type -eq "Keyword"
-        if ($isKeyword -and $tokens[$_].Content -eq "function") {
+        $isKeyword = $tokens[$_].Type -eq 'Keyword'
+        if ($isKeyword -and $tokens[$_].Content -eq 'function') {
             return $tokens[$_ + 1].Content
+
+            # TODO:
+            # return @{
+            #     Type = 'Function|Variable'
+            #     Name = ''
+            #     Aliases = @()
+            # }
         }
     }
 }

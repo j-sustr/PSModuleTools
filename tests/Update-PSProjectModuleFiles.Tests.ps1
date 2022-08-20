@@ -21,16 +21,23 @@ Describe 'Update-PSProjectModuleFiles Tests' {
                 ModuleManifestFilePath = 'dummymanifestpath.psd1'
                 ScriptModuleFilePath   = 'dummyscriptmodulepath.psm1'
                 Functions              = @{
-                    Private = @('FuncA')
-                    Public  = @('funcB')
+                    Private = @('funcA')
+                    Public  = @('FuncB')
                 }
             }
         }
-        Mock Update-ModuleManifest {}
+        Mock Update-ModuleManifest {
+            $args
+        }
         Mock Set-Content {}
 
-        $info = Update-PSProjectModuleFiles 
+        $info = Update-PSProjectModuleFiles
 
-        Should -Invoke -CommandName Update-ModuleManifest -Times 1 -ParameterFilter { $value -eq 'lol' }
+        Should -Invoke -CommandName Update-ModuleManifest -Times 1 -ParameterFilter { $Path -eq 'dummymanifestpath.psd1' -and $RootModule -eq 'dummyscriptmodulepath.psm1' }
+        # $FunctionsToExport -eq @('FuncB')
+
+        $expectedScriptModuleContent = ''
+
+        Should -Invoke -CommandName Set-Content -Times 1 -ParameterFilter { $Path -eq 'dummyscriptmodulepath.psm1' -and $Value -eq $expectedScriptModuleContent }
     }
 }
