@@ -17,13 +17,20 @@ Describe 'Update-PSProjectModuleFiles Tests' {
         }
         Mock Get-PSProjectCodeInfo {
             return @{
-                HasWorking = $false
+                SrcPath                = 'src'
+                ModuleManifestFilePath = 'dummymanifestpath.psd1'
+                ScriptModuleFilePath   = 'dummyscriptmodulepath.psm1'
+                Functions              = @{
+                    Private = @('FuncA')
+                    Public  = @('funcB')
+                }
             }
         }
         Mock Update-ModuleManifest {}
+        Mock Set-Content {}
 
         $info = Update-PSProjectModuleFiles 
 
-        $info.Functions | Should -BeExactly @('Get-Something', 'doSomething')
+        Should -Invoke -CommandName Update-ModuleManifest -Times 1 -ParameterFilter { $value -eq 'lol' }
     }
 }
