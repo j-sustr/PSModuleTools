@@ -1,18 +1,23 @@
 
+<#
 
+    Public members start with capital letter
+    Private members start with lowercase letter (This can be overriden by ...)
+
+#>
 function Get-PSProjectCodeInfo {
     [CmdletBinding()]
     param (
         [string]
         $Path = '.'
     )
-    
+
     # --- paths ---
     $repoPath = Split-Path (Get-GitDirectory -Path $Path) -Parent
     $srcPath = Join-Path $repoPath 'src'
     $moduleManifestFilePath = getModuleManifestFilePath $srcPath
     $scriptModuleFilePath = getScriptModuleFilePath $srcPath
-    
+
     # --- code ---
     $scriptFiles = Get-ChildItem -Path $srcPath -Recurse -Filter *.ps1
     $codeInfo = $scriptFiles | Get-PSCodeInfo
@@ -21,9 +26,9 @@ function Get-PSProjectCodeInfo {
     }
 
     $functionGroups = $codeInfo.Functions | Group-Object -Property { $_ -cmatch '^[a-z]' ? 'Private' : 'Public' } -AsHashTable
-    
+
     $scriptFilePaths = $scriptFiles | ForEach-Object { $_.FullName.Replace($srcPath, 'src') }
-    
+
     # $nestedModules = @()
 
     return [PSCustomObject]@{

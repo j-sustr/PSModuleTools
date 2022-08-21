@@ -1,10 +1,4 @@
 
-<#
-
-    Public members start with capital letter
-    Private members start with lowercase letter (This can be overriden by ...)
-
-#>
 
 function Update-PSProjectModuleFiles {
     [CmdletBinding()]
@@ -41,7 +35,7 @@ function Update-PSProjectModuleFiles {
 
 function formatScriptModuleContent($scriptPaths) {
     $sb = [System.Text.StringBuilder]::new()
-    
+
     foreach ($path in $scriptPaths) {
         $path = $path -replace '^src\\', '$PSScriptRoot\'
         [void]$sb.AppendLine(". $path")
