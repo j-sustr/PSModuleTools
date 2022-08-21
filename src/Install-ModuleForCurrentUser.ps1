@@ -5,18 +5,12 @@ function Install-ModuleForCurrentUser {
     param (
         [Parameter(Mandatory, Position = 0)]
         [string]
-        $ModuleRoot,
-
-        [Parameter(Position = 1)]
-        [version]
-        $Version = '0.0.1'
+        $ModuleRoot
     )
 
-    # $version = [version] (Get-Metadata -Path $ManifestPath -PropertyName 'ModuleVersion')
-
-    $destPath = Get-PSModulePathForCurrentUser
-    if (-not (Test-Path $destPath)) {
-        throw "PSModulePath '$destPath' does not exist"
+    $psModulePath = Get-PSModulePathForCurrentUser
+    if (-not (Test-Path $psModulePath)) {
+        throw "PSModulePath '$psModulePath' does not exist"
     }
 
     $manifestPath = Get-ChildItem $ModuleRoot -Filter *.psd1 | Select-Object -First 1
@@ -25,10 +19,10 @@ function Install-ModuleForCurrentUser {
     }
 
     $moduleName = $manifestPath | Split-Path -LeafBase
+    $version = [version] (Get-Metadata -Path $manifestPath -PropertyName 'ModuleVersion')
 
-    "Using [$destPath] as base path..."
-    $destPath = Join-Path -Path $destPath -ChildPath $moduleName
-    $destPath = Join-Path -Path $destPath -ChildPath $Version
+    "Using [$psModulePath] as base path..."
+    $destPath = Join-Path $psModulePath $moduleName $version
 
     "Creating directory at [$destPath]..."
     New-Item -Path $destPath -ItemType 'Directory' -Force -ErrorAction 'Ignore'
