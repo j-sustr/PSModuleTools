@@ -15,8 +15,6 @@ Describe 'Install-ModuleForCurrentUser Tests' {
 
         Install-ModuleForCurrentUser "$(getSampleProjectPath)\src" -Verbose
 
-        "$psModulePath\sampleproject\0.0.1" | Should -Exist
-
-        Write-Host resolveTestDriveFullPath
+        "$psModulePath\sampleproject\0.0.1\sampleproject.psd1" | Should -Exist
     }
 }
