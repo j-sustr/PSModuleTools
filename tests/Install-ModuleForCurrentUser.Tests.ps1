@@ -5,17 +5,18 @@ BeforeAll {
 
 Describe 'Install-ModuleForCurrentUser Tests' {
     BeforeAll {
-        $testPSModulePath = Join-Path ([System.IO.Path]::GetTempPath()) "PowerShellTest\Modules"
-        New-Item $testPSModulePath -ItemType Directory -Force
+        $psModulePath = getPSModulePath
     }
 
     It 'Installs a module' {
         Mock Get-PSModulePathForCurrentUser {
-            return $testPSModulePath
+            return $psModulePath
         }
 
-        Install-ModuleForCurrentUser $modulePath
+        Install-ModuleForCurrentUser "$(getSampleProjectPath)\src" -Verbose
 
-        Test-Path $testPSModulePath\
+        "$psModulePath\sampleproject\0.0.1" | Should -Exist
+
+        Write-Host resolveTestDriveFullPath
     }
 }
