@@ -4,19 +4,20 @@ function Update-PSProjectModuleFiles {
     [CmdletBinding()]
     param (
         [string]
-        $Path = '.',
+        $SrcRoot = (getSrcRoot),
 
-        [Switch]
         # Ignore Git repo status
+        [Switch]
         $Force
     )
 
     # Check Git repo status
-    if ((Get-GitStatus).HasWorking -and (-not $Force.IsPresent)) {
-        throw "Repo '$repoPath' has working files"
+    if (-not $Force.IsPresent) {
+        assertRepoHasNoWorking
     }
+    Assert-PSModuleProjectFiles $SrcRoot
 
-    $projectInfo = Get-PSProjectCodeInfo $Path
+    $projectInfo = Get-PSProjectCodeInfo $SrcRoot
 
     # --- .psd1 ---
     $updateParams = @{
@@ -31,7 +32,6 @@ function Update-PSProjectModuleFiles {
 
     Set-Content -Path $projectInfo.ScriptModuleFilePath -Value $scriptModuleContent
 }
-
 
 function formatScriptModuleContent($scriptPaths) {
     $sb = [System.Text.StringBuilder]::new()
