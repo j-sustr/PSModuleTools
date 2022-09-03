@@ -1,6 +1,8 @@
 
 
-function assertRepoHasNoWorking {
+function assertRepoHasNoWorking($path) {
+    Push-Location $path
+
     $gitStatus = (Get-GitStatus)
 
     if ($gitStatus.HasWorking) {
@@ -8,4 +10,6 @@ function assertRepoHasNoWorking {
 
         throw "Repo '$repoRoot' has working files"
     }
+
+    Pop-Location
 }

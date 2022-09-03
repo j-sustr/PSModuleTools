@@ -3,6 +3,7 @@
 function Update-PSModuleProjectFiles {
     [CmdletBinding()]
     param (
+        [Parameter(Position = 0)]
         [string]
         $SrcRoot = (getSrcRoot),
 
@@ -13,7 +14,7 @@ function Update-PSModuleProjectFiles {
 
     # Check Git repo status
     if (-not $Force.IsPresent) {
-        assertRepoHasNoWorking
+        assertRepoHasNoWorking $SrcRoot
     }
     Assert-PSModuleProjectFiles $SrcRoot
 

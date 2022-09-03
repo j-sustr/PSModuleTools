@@ -38,7 +38,10 @@ function Get-PSCodeInfo {
             $filepath = ''
         }
 
-        $tokens = [Management.Automation.PSParser]::Tokenize($code, [ref]$errors)
+        $tokens = $null
+        if ($null -ne $code) {
+            $tokens = [Management.Automation.PSParser]::Tokenize($code, [ref]$errors)
+        }
 
         # TODO: Get function aliases
         $functions = @(getFunctionsFromTokens($tokens))
