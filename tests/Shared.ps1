@@ -1,5 +1,7 @@
 $modulePath = Convert-Path $PSScriptRoot\..\src
 $moduleManifestPath = "$modulePath\PSModuleTools.psd1"
+[System.Diagnostics.CodeAnalysis.SuppressMessage('PSUseDeclaredVarsMoreThanAssigments', '')]
+$testDataPath = Convert-Path "$PSScriptRoot\data"
 
 . $modulePath\utils\assertRepoHasNoWorking.ps1
 . $modulePath\utils\getRepoRoot.ps1

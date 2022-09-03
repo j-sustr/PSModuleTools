@@ -16,6 +16,8 @@ function Install-ModuleForCurrentUser {
     }
 
     Assert-PSModuleProjectFiles $ModuleRoot
+    Update-PSModuleProjectFiles $ModuleRoot
+
     $manifestPath = Convert-Path $ModuleRoot\*.psd1
 
     $moduleName = $manifestPath | Split-Path -LeafBase
