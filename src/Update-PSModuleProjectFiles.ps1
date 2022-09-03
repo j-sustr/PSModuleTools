@@ -1,6 +1,6 @@
 
 
-function Update-PSProjectModuleFiles {
+function Update-PSModuleProjectFiles {
     [CmdletBinding()]
     param (
         [string]
