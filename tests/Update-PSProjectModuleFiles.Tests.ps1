@@ -1,8 +1,5 @@
 BeforeAll {
     . $PSScriptRoot\Shared.ps1
-    . $modulePath\utils\assertRepoHasNoWorking.ps1
-    . $modulePath\utils\getRepoRoot.ps1
-    . $modulePath\utils\getSrcRoot.ps1
     . $modulePath\Update-PSModuleProjectFiles.ps1
 }
 
@@ -13,12 +10,15 @@ Describe 'Update-PSModuleProjectFiles Tests' {
     }
 
     It 'Updates PSProject module files' {
+        Mock Get-GitDirectory {
+            return Join-Path $PSScriptRoot 'data\sampleproject\.git'
+        }
         Mock Get-GitStatus {
             return @{
                 HasWorking = $false
             }
         }
-        Mock Get-PSProjectCodeInfo {
+        Mock Get-PSModuleProjectCodeInfo {
             return @{
                 SrcPath                = 'src'
                 ModuleManifestFilePath = 'dummymanifestpath.psd1'

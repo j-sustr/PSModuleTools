@@ -17,7 +17,7 @@ function Update-PSModuleProjectFiles {
     }
     Assert-PSModuleProjectFiles $SrcRoot
 
-    $projectInfo = Get-PSProjectCodeInfo $SrcRoot
+    $projectInfo = Get-PSModuleProjectCodeInfo $SrcRoot
 
     # --- .psd1 ---
     $updateParams = @{
