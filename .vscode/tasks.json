@@ -6,7 +6,7 @@
   // Associate with test task runner
   "tasks": [
     {
-      "label": "Test",
+      "label": "Test PSModuleTools",
       "type": "shell",
       "command": "Import-Module Pester -MinimumVersion 5.0.0; $c = [PesterConfiguration]::Default; $c.Run.Path = 'tests'; $c.Output.Verbosity = 'Detailed'; Invoke-Pester -Configuration $c",
       "group": {

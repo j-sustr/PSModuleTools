@@ -1,9 +1,12 @@
 BeforeAll {
     . $PSScriptRoot\Shared.ps1
-    . $modulePath\Update-PSProjectModuleFiles.ps1
+    . $modulePath\utils\assertRepoHasNoWorking.ps1
+    . $modulePath\utils\getRepoRoot.ps1
+    . $modulePath\utils\getSrcRoot.ps1
+    . $modulePath\Update-PSModuleProjectFiles.ps1
 }
 
-Describe 'Update-PSProjectModuleFiles Tests' {
+Describe 'Update-PSModuleProjectFiles Tests' {
     BeforeAll {
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssigments', '')]
         $sampleScriptPath = Join-Path $PSScriptRoot 'data\sampleproject\src\Get-Something.ps1'
@@ -20,6 +23,7 @@ Describe 'Update-PSProjectModuleFiles Tests' {
                 SrcPath                = 'src'
                 ModuleManifestFilePath = 'dummymanifestpath.psd1'
                 ScriptModuleFilePath   = 'dummyscriptmodulepath.psm1'
+                ScriptFilePaths        = @('src\utils\funcA.ps1', 'src\utils\FuncB.ps1')
                 Functions              = @{
                     Private = @('funcA')
                     Public  = @('FuncB')
@@ -29,15 +33,24 @@ Describe 'Update-PSProjectModuleFiles Tests' {
         Mock Update-ModuleManifest {
             $args
         }
-        Mock Set-Content {}
+        Mock Set-Content {
 
-        $info = Update-PSProjectModuleFiles
+        }
 
-        Should -Invoke -CommandName Update-ModuleManifest -Times 1 -ParameterFilter { $Path -eq 'dummymanifestpath.psd1' -and $RootModule -eq 'dummyscriptmodulepath.psm1' }
+        Update-PSModuleProjectFiles
+
+        Should -Invoke -CommandName Update-ModuleManifest -Times 1 -ExclusiveFilter { $Path -eq 'dummymanifestpath.psd1' -and $RootModule -eq 'dummyscriptmodulepath.psm1' }
         # $FunctionsToExport -eq @('FuncB')
 
-        $expectedScriptModuleContent = ''
+        Should -Invoke -CommandName Set-Content -Times 1 -ExclusiveFilter {
+            $Path | Should -Be 'dummyscriptmodulepath.psm1'
+            $Value | Should -Be (@(
+                    '. $PSScriptRoot\utils\funcA.ps1',
+                    '. $PSScriptRoot\utils\FuncB.ps1'
+                ) -join "`r`n" | Out-String)
 
-        Should -Invoke -CommandName Set-Content -Times 1 -ParameterFilter { $Path -eq 'dummyscriptmodulepath.psm1' -and $Value -eq $expectedScriptModuleContent }
+            return $true
+        }
+        # -and $Value -eq $expectedScriptModuleContent
     }
 }
