@@ -1,9 +1,9 @@
 BeforeAll {
     . $PSScriptRoot\Shared.ps1
-    . $modulePath\Get-PSProjectCodeInfo.ps1
+    . $modulePath\Get-PSModuleProjectCodeInfo.ps1
 }
 
-Describe 'Get-PSProjectCodeInfo Tests' {
+Describe 'Get-PSModuleProjectCodeInfo Tests' {
     BeforeAll {
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssigments', '')]
         $sampleProjectPath = Join-Path $PSScriptRoot 'data\sampleproject'
@@ -19,15 +19,14 @@ Describe 'Get-PSProjectCodeInfo Tests' {
             return "$sampleProjectPath\.git"
         }
 
-        $info = Get-PSProjectCodeInfo $modulePath
-
-
-        $info
+        $info = Get-PSModuleProjectCodeInfo
 
         $info.SrcPath | Should -BeExactly "$sampleProjectPath\src"
         $info.ModuleManifestFilePath | Should -BeExactly "$sampleProjectPath\src\sampleproject.psd1"
         $info.ScriptModuleFilePath | Should -BeExactly "$sampleProjectPath\src\sampleproject.psm1"
-        $info.Functions | Should -BeExactly @('Get-Something')
-
+        $info.Functions.Private | Should -Be @('funcB')
+        $info.Functions.Public | Should -Be  @('FuncA', 'DummyFn')
     }
+
 }
+

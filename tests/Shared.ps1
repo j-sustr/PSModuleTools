@@ -1,6 +1,9 @@
-
 $modulePath = Convert-Path $PSScriptRoot\..\src
 $moduleManifestPath = "$modulePath\PSModuleTools.psd1"
+
+. $modulePath\utils\assertRepoHasNoWorking.ps1
+. $modulePath\utils\getRepoRoot.ps1
+. $modulePath\utils\getSrcRoot.ps1
 
 function getPSModulePath {
     $path = 'TestDrive:\Modules'
