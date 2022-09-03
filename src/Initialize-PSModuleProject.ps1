@@ -4,6 +4,7 @@ function Initialize-PSModuleProject {
     [CmdletBinding()]
     param (
         [Parameter(Position = 0)]
+        [ValidateNotNullOrEmpty()]
         [string]
         $RepoRoot = (getRepoRoot),
 

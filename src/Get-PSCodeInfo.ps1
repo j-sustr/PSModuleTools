@@ -10,6 +10,7 @@ function Get-PSCodeInfo {
     (
         [string]
         [Parameter(Mandatory, ValueFromPipeline, ParameterSetName = 'Path')]
+        [ValidateNotNullOrEmpty()]
         [Alias('FullName')]
         $Path,
 

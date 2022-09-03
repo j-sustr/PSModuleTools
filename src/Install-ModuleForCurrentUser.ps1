@@ -4,6 +4,7 @@ function Install-ModuleForCurrentUser {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory, Position = 0)]
+        [ValidateNotNullOrEmpty()]
         [string]
         $ModuleRoot
     )
@@ -13,10 +14,8 @@ function Install-ModuleForCurrentUser {
         throw "PSModulePath '$psModulePath' does not exist"
     }
 
-    $manifestPath = Get-ChildItem $ModuleRoot -Filter *.psd1 | Select-Object -First 1
-    if (-not $manifestPath) {
-        throw "Module '$ModuleRoot' does not contain a *.psd1 file"
-    }
+    Assert-PSModuleProjectFiles $ModuleRoot
+    $manifestPath = Convert-Path $ModuleRoot\*.psd1
 
     $moduleName = $manifestPath | Split-Path -LeafBase
     $version = [version] (Get-Metadata -Path $manifestPath -PropertyName 'ModuleVersion')

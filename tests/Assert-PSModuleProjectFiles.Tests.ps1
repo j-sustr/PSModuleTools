@@ -6,10 +6,16 @@ BeforeAll {
 Describe 'Assert-PSModuleProjectFiles Tests' {
     BeforeAll {
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssigments', '')]
-        $sampleSrcPath = Join-Path $PSScriptRoot 'data\sampleproject\src'
+        $srcRoot = Join-Path $PSScriptRoot 'data\sampleproject\src'
     }
 
     It 'PS Module Project Files are correct' {
-        Assert-PSModuleProjectFiles $sampleScriptPath | Should -Not -Throw
+        { Assert-PSModuleProjectFiles $srcRoot } | Should -Not -Throw
+    }
+
+    It 'PS Module Project Files are missing' {
+        $srcRootWithMissingFiles = Join-Path $PSScriptRoot 'data\sampleproject-missingmodulefiles\src'
+
+        { Assert-PSModuleProjectFiles $srcRootWithMissingFiles } | Should -Throw
     }
 }

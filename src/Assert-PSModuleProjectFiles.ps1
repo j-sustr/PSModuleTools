@@ -4,6 +4,7 @@ function Assert-PSModuleProjectFiles {
     [CmdletBinding()]
     param (
         [Parameter(Position = 0)]
+        [ValidateNotNullOrEmpty()]
         [string]
         $SrcRoot = (getSrcRoot)
     )
