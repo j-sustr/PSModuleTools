@@ -8,6 +8,7 @@ function Install-ModuleForCurrentUser {
         [string]
         $ModuleRoot
     )
+    $ModuleRoot = Convert-Path $ModuleRoot
 
     $psModulePath = Get-PSModulePathForCurrentUser
     if (-not (Test-Path $psModulePath)) {
@@ -20,12 +21,12 @@ function Install-ModuleForCurrentUser {
     $moduleName = $manifestPath | Split-Path -LeafBase
     $version = [version] (Get-Metadata -Path $manifestPath -PropertyName 'ModuleVersion')
 
-    "Using [$psModulePath] as base path..."
+    "Using '$psModulePath' as base path..."
     $destPath = Join-Path $psModulePath $moduleName $version
 
-    "Creating directory at [$destPath]..."
-    New-Item -Path $destPath -ItemType 'Directory' -Force -ErrorAction 'Ignore'
+    "Creating directory at '$destPath'..."
+    $null = New-Item -Path $destPath -ItemType 'Directory' -Force -ErrorAction 'Ignore'
 
-    "Copying items from [$ModuleRoot] to [$destPath]..."
-    Copy-Item -Path "$ModuleRoot\*" -Destination $destPath -Recurse -Force
+    "Copying items from '$ModuleRoot' to '$destPath'..."
+    $null = Copy-Item -Path "$ModuleRoot\*" -Destination $destPath -Recurse -Force
 }

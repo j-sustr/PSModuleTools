@@ -22,7 +22,6 @@ function assertPsd1($srcRoot) {
     if ($psd1Path.Count -gt 1) {
         throw "There must be only one .psd1 file in '$srcRoot'"
     }
-    return $psd1Path
 }
 
 function assertPsm1($srcRoot) {
@@ -33,5 +32,4 @@ function assertPsm1($srcRoot) {
     if ($psm1Path.Count -gt 1) {
         throw "There must be only one .psm1 file in '$srcRoot'"
     }
-    return $psm1Path
 }
