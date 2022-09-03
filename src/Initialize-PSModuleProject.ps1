@@ -27,10 +27,10 @@ function Initialize-PSModuleProject {
         "Creating module manifest file '$psd1Path'"
         New-ModuleManifest -Path $psd1Path -RootModule 'module.psm1'
     }
-    if (-not (Test-Path $srcRoot\*.psd1)) {
-        $psd1Path = "$srcRoot\module.psm1"
-        "Creating script module file '$srcRoot'"
-        New-Item -Path $srcRoot -ItemType File
+    if (-not (Test-Path $srcRoot\*.psm1)) {
+        $psm1Path = "$srcRoot\module.psm1"
+        "Creating script module file '$psm1Path'"
+        New-Item -Path $psm1Path -ItemType File
     }
 
     Assert-PSModuleProjectFiles $srcRoot

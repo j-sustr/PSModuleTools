@@ -5,6 +5,12 @@ $moduleManifestPath = "$modulePath\PSModuleTools.psd1"
 . $modulePath\utils\getRepoRoot.ps1
 . $modulePath\utils\getSrcRoot.ps1
 
+function getEmptyDirectory {
+    $path = 'TestDrive:\EmptyDir'
+    $null = New-Item $path -ItemType Directory -Force
+    return $path
+}
+
 function getPSModulePath {
     $path = 'TestDrive:\Modules'
     $null = New-Item $path -ItemType Directory -Force
