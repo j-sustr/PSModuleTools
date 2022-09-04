@@ -29,7 +29,8 @@ function Update-PSModuleProjectFiles {
     Update-ModuleManifest @updateParams
 
     # --- .psm1 ---
-    $scriptModuleContent = formatScriptModuleContent $projectInfo.ScriptFilePaths
+    $sortedScriptPaths = $projectInfo.ScriptFilePaths | Sort-Object
+    $scriptModuleContent = formatScriptModuleContent $sortedScriptPaths
 
     Set-Content -Path $projectInfo.ScriptModuleFilePath -Value $scriptModuleContent
 }

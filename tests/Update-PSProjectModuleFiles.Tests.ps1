@@ -23,7 +23,7 @@ Describe 'Update-PSModuleProjectFiles Tests' {
                 SrcPath                = 'src'
                 ModuleManifestFilePath = 'dummymanifestpath.psd1'
                 ScriptModuleFilePath   = 'dummyscriptmodulepath.psm1'
-                ScriptFilePaths        = @('src\utils\funcA.ps1', 'src\utils\FuncB.ps1')
+                ScriptFilePaths        = @('src\utils\FuncB.ps1', 'src\utils\funcA.ps1')
                 Functions              = @{
                     Private = @('funcA')
                     Public  = @('FuncB')
