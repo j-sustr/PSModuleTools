@@ -12,6 +12,7 @@ function Get-PSModuleProjectCodeInfo {
         [string]
         $SrcRoot = (getSrcRoot)
     )
+    $SrcRoot = Convert-Path $SrcRoot
 
     # --- paths ---
     Assert-PSModuleProjectFiles $SrcRoot
