@@ -25,9 +25,10 @@ function Update-PSModuleProjectFiles {
         Path              = $projectInfo.ModuleManifestFilePath
         RootModule        = Split-Path $projectInfo.ScriptModuleFilePath -Leaf
         FunctionsToExport = $projectInfo.Functions.Public
-        CmdletsToExport   = @()
-        VariablesToExport = @()
-        AliasesToExport   = @()
+        # FIXME: Update-ModuleManifest does not accept $null
+        # CmdletsToExport   = [string[]]@()
+        # VariablesToExport = [string[]]@()
+        # AliasesToExport   = [string[]]@()
     }
     Update-ModuleManifest @updateParams
 
