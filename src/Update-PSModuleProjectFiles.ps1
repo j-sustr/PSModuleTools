@@ -25,6 +25,9 @@ function Update-PSModuleProjectFiles {
         Path              = $projectInfo.ModuleManifestFilePath
         RootModule        = Split-Path $projectInfo.ScriptModuleFilePath -Leaf
         FunctionsToExport = $projectInfo.Functions.Public
+        CmdletsToExport   = @()
+        VariablesToExport = @()
+        AliasesToExport   = @()
     }
     Update-ModuleManifest @updateParams
 
