@@ -3,6 +3,12 @@ BeforeAll {
     . $modulePath\Update-PSModuleProjectFiles.ps1
 }
 
+# Describe 'Debug' {
+#     It 'Run' {
+#         Update-PSModuleProjectFiles -SrcRoot 'C:\__work__\powershell-modules\PSMetaUtils\src' -Force
+#     }
+# }
+
 Describe 'Update-PSModuleProjectFiles Tests' {
     BeforeAll {
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssigments', '')]
@@ -23,7 +29,7 @@ Describe 'Update-PSModuleProjectFiles Tests' {
                 SrcPath                = 'src'
                 ModuleManifestFilePath = 'dummymanifestpath.psd1'
                 ScriptModuleFilePath   = 'dummyscriptmodulepath.psm1'
-                ScriptFilePaths        = @('src\utils\FuncB.ps1', 'src\utils\funcA.ps1')
+                ScriptFilePaths        = @('src\File1.ps1', 'src\utils\FuncB.ps1', 'src\utils\funcA.ps1')
                 Functions              = @{
                     Private = @('funcA')
                     Public  = @('FuncB')
@@ -46,7 +52,8 @@ Describe 'Update-PSModuleProjectFiles Tests' {
             $Path | Should -Be 'dummyscriptmodulepath.psm1'
             $Value | Should -Be (@(
                     '. $PSScriptRoot\utils\funcA.ps1',
-                    '. $PSScriptRoot\utils\FuncB.ps1'
+                    '. $PSScriptRoot\utils\FuncB.ps1',
+                    '. $PSScriptRoot\File1.ps1'
                 ) -join "`r`n" | Out-String)
 
             return $true

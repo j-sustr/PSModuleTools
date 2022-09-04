@@ -29,10 +29,18 @@ function Update-PSModuleProjectFiles {
     Update-ModuleManifest @updateParams
 
     # --- .psm1 ---
-    $sortedScriptPaths = $projectInfo.ScriptFilePaths | Sort-Object
+    $sortedScriptPaths = sortScriptPaths $projectInfo.ScriptFilePaths
     $scriptModuleContent = formatScriptModuleContent $sortedScriptPaths
 
     Set-Content -Path $projectInfo.ScriptModuleFilePath -Value $scriptModuleContent
+}
+
+function sortScriptPaths($paths) {
+    # [Array]::Copy($paths, $newPaths, $paths.Count)
+    $newPaths = @() + $paths
+    [Array]::Sort($newPaths, [StringComparer]::Ordinal)
+    [Array]::Reverse($newPaths)
+    return $newPaths
 }
 
 function formatScriptModuleContent($scriptPaths) {
