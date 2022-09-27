@@ -10,11 +10,7 @@ function Install-ModuleForCurrentUser {
         [switch] $Force
     )
     $ModuleRoot = Convert-Path $ModuleRoot
-
     $psModulePath = Get-PSModulePathForCurrentUser
-    if (-not (Test-Path $psModulePath)) {
-        throw "PSModulePath '$psModulePath' does not exist"
-    }
 
     Assert-PSModuleProjectFiles $ModuleRoot
     Update-PSModuleProjectFiles $ModuleRoot -Force:$Force
