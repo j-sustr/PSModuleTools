@@ -5,15 +5,13 @@ function Install-ModuleForCurrentUser {
     param (
         [Parameter(Mandatory, Position = 0)]
         [ValidateNotNullOrEmpty()]
-        [string] $ModuleRoot,
-
-        [switch] $Force
+        [string] $ModuleRoot
     )
     $ModuleRoot = Convert-Path $ModuleRoot
     $psModulePath = Get-PSModulePathForCurrentUser
 
     Assert-PSModuleProjectFiles $ModuleRoot
-    Update-PSModuleProjectFiles $ModuleRoot -Force:$Force
+    # Update-PSModuleProjectFiles $ModuleRoot -Force:$Force
 
     $manifestPath = Convert-Path $ModuleRoot\*.psd1
 
