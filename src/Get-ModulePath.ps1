@@ -11,12 +11,13 @@ function Get-ModulePath {
         [switch] $LatestVersion
     )
 
-    $modules = Get-Module -Name $Name -ListAvailable
+    $modulePaths = Get-Module -Name $Name -ListAvailable
     | Sort-Object -Property Version -Descending
+    | ForEach-Object { Split-Path $_.Path -Parent }
 
     if ($LatestVersion.IsPresent) {
-        return $modules[0].Path
+        return $modulePaths | Select-Object -First 1
     }
 
-    return $modules.Path
+    return $modulePaths
 }
