@@ -1,4 +1,4 @@
 
-Update-PSModuleProjectFiles $PSScriptRoot -ErrorAction Stop
+Update-PSModuleProjectFiles $PSScriptRoot\src -ErrorAction Stop
 
 Install-ModuleForCurrentUser $PSScriptRoot\src
