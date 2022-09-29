@@ -34,9 +34,11 @@ function Update-PSModuleProjectFiles {
     Update-ModuleManifest @updateParams
 
     # --- .psm1 ---
-    $includeInit = Test-Path (Join-Path $projectInfo.SrcPath $initScriptName)
-    $sortedScriptPaths = sortScriptPaths $projectInfo.ScriptFilePaths
-    $scriptModuleContent = formatScriptModuleContent $sortedScriptPaths $includeInit
+    $scriptPathsWithoutInit = $projectInfo.ScriptFilePaths | Where-Object { $_ -ne "src\$initScriptName" }
+    $hasInit = $scriptPathsWithoutInit.Count -ne $projectInfo.ScriptFilePaths.Count
+
+    $sortedScriptPaths = sortScriptPaths $scriptPathsWithoutInit
+    $scriptModuleContent = formatScriptModuleContent $sortedScriptPaths $hasInit
 
     Set-Content -Path $projectInfo.ScriptModuleFilePath -Value $scriptModuleContent
 }

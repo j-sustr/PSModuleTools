@@ -65,7 +65,7 @@ Describe 'Update-PSModuleProjectFiles Tests' {
                 SrcPath                = 'src'
                 ModuleManifestFilePath = 'dummymanifestpath.psd1'
                 ScriptModuleFilePath   = 'dummyscriptmodulepath.psm1'
-                ScriptFilePaths        = @('src\File1.ps1', 'src\utils\FuncB.ps1', 'src\utils\funcA.ps1')
+                ScriptFilePaths        = @('src\File1.ps1', 'src\utils\FuncB.ps1', 'src\utils\funcA.ps1', 'src\init.ps1')
                 Functions              = @{
                     Private = @('funcA')
                     Public  = @('FuncB')
@@ -73,16 +73,9 @@ Describe 'Update-PSModuleProjectFiles Tests' {
             }
         }
 
-        Mock Test-Path {
-            return $true
-        } -Verifiable -ParameterFilter {
-            $Path -like 'src\init.ps1'
-        }
-
         Update-PSModuleProjectFiles
 
         Should -Invoke -CommandName Update-ModuleManifest -Times 1 -ExclusiveFilter { $Path -eq 'dummymanifestpath.psd1' -and $RootModule -eq 'dummyscriptmodulepath.psm1' }
-        Should -Invoke -CommandName Test-Path -Times 1 -ExclusiveFilter { $Path -eq 'src\init.ps1' }
 
         Should -Invoke -CommandName Set-Content -Times 1 -ExclusiveFilter {
             $Path | Should -Be 'dummyscriptmodulepath.psm1'

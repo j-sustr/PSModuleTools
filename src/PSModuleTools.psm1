@@ -1,3 +1,5 @@
+. $PSScriptRoot\init.ps1
+
 . $PSScriptRoot\utils\promptYesNo.ps1
 . $PSScriptRoot\utils\getSrcRoot.ps1
 . $PSScriptRoot\utils\getRepoRoot.ps1
