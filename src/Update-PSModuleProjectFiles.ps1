@@ -43,7 +43,7 @@ function Update-PSModuleProjectFiles {
     Set-Content -Path $projectInfo.ScriptModuleFilePath -Value $scriptModuleContent
 }
 
-function sortScriptPaths($paths) {
+function sortScriptPaths([string[]] $paths) {
     # [Array]::Copy($paths, $newPaths, $paths.Count)
     $newPaths = @() + $paths
     [Array]::Sort($newPaths, [StringComparer]::Ordinal)
