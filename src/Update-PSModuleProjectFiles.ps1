@@ -1,4 +1,5 @@
 
+$initScriptName = 'init.ps1'
 
 function Update-PSModuleProjectFiles {
     [CmdletBinding()]
@@ -33,8 +34,9 @@ function Update-PSModuleProjectFiles {
     Update-ModuleManifest @updateParams
 
     # --- .psm1 ---
+    $includeInit = Test-Path (Join-Path $projectInfo.SrcPath $initScriptName)
     $sortedScriptPaths = sortScriptPaths $projectInfo.ScriptFilePaths
-    $scriptModuleContent = formatScriptModuleContent $sortedScriptPaths
+    $scriptModuleContent = formatScriptModuleContent $sortedScriptPaths $includeInit
 
     Set-Content -Path $projectInfo.ScriptModuleFilePath -Value $scriptModuleContent
 }
@@ -47,8 +49,13 @@ function sortScriptPaths($paths) {
     return $newPaths
 }
 
-function formatScriptModuleContent($scriptPaths) {
+function formatScriptModuleContent($scriptPaths, $includeInit) {
     $sb = [System.Text.StringBuilder]::new()
+
+    if ($includeInit) {
+        [void]$sb.AppendLine('. $PSScriptRoot\{0}' -f $initScriptName)
+        [void]$sb.AppendLine();
+    }
 
     foreach ($path in $scriptPaths) {
         $path = $path -replace '^src\\', '$PSScriptRoot\'
