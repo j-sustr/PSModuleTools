@@ -7,4 +7,4 @@ $srcPath = "$PSScriptRoot\src"
 . $srcPath\Update-PSModuleProjectFiles.ps1
 
 
-Update-PSModuleProjectFiles -Force
+Update-PSModuleProjectFiles -SrcRoot "$PSScriptRoot\src" -Force
